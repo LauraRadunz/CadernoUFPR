@@ -1,0 +1,200 @@
+.brand.static{cursor:default}
+/* Estante */
+.shelf{list-style:none;margin:26px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr));gap:14px}
+.spine{width:100%;height:100%;display:grid;grid-template-columns:auto 1fr;grid-template-areas:"emb t" "go go";gap:6px 16px;text-align:left;background:var(--c-bg);color:var(--c-fg);border:1px solid var(--c-hi);padding:18px;cursor:pointer;font:inherit;position:relative}
+.spine::before{content:"";position:absolute;inset:5px;border:1px solid var(--c-hi);opacity:.55;pointer-events:none}
+.spine:hover{filter:brightness(1.1)}
+.spine .emb{grid-area:emb;font-family:var(--font-display);font-weight:700;font-size:3.2rem;line-height:1;color:var(--c-hi);min-width:3rem;text-align:center}
+.spine .sp-t{grid-area:t;display:flex;flex-direction:column;gap:6px;min-width:0}
+.spine .sp-n{font-family:var(--font-display);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:1.2rem}
+.spine .sp-s{font-size:.98rem;opacity:.9}
+.spine .sp-bar{display:block;height:5px;background:rgba(255,255,255,.25);margin-top:6px}
+.spine .sp-bar i{display:block;height:100%;background:var(--c-hi)}
+.spine .sp-m{font-size:.9rem;opacity:.9;font-variant-numeric:tabular-nums}
+.spine .sp-go{grid-area:go;justify-self:end;font-family:var(--font-display);font-weight:700;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--c-hi)}
+/* Tema: hub (neutro) */
+:root[data-cad="hub"]{--bg:#d6cfba;--page:#efe6cf;--ink:#25231f;--ink-soft:#66625a;--rule:#bdb398;--accent:#2f2e2a;--accent-ink:#f2f0ea;--gilt:#8c8470;--sel-bg:#e2d8ba}
+/* Tema: filosofia (pedra calcária, azul-tinta, bronze) */
+:root[data-cad="filosofia"]{--bg:#bcc8de;--page:#e3e9f5;--ink:#1c2433;--ink-soft:#586175;--rule:#9eadcd;--accent:#23387a;--accent-ink:#f0eee7;--gilt:#86672c;--ok:#1f6b55;--ok-bg:#d8e8e0;--bad:#a3332b;--bad-bg:#f1dcd6;--sel-bg:#cbd6ee;
+  --font-display:"Cormorant Garamond","Palatino Linotype",Georgia,serif;--font-body:"Source Serif 4","Iowan Old Style",Georgia,serif}
+@media (prefers-color-scheme: dark){
+  :root[data-cad="hub"]:not([data-theme="light"]){--bg:#141311;--page:#1e1d1a;--ink:#e8e5dc;--ink-soft:#a09b8e;--rule:#38362f;--accent:#e8e5dc;--accent-ink:#141311;--gilt:#a09b8e;--sel-bg:#2a2824;color-scheme:dark}
+  :root[data-cad="filosofia"]:not([data-theme="light"]){--bg:#0f1420;--page:#171e2e;--ink:#e6e8ef;--ink-soft:#9aa3b8;--rule:#2c3650;--accent:#8fa9ff;--accent-ink:#0f1420;--gilt:#d1b06a;--ok:#8fd0b4;--ok-bg:#17302a;--bad:#f09a8e;--bad-bg:#3a1f20;--sel-bg:#232d46;color-scheme:dark}
+}
+:root[data-theme="dark"][data-cad="hub"]{--bg:#141311;--page:#1e1d1a;--ink:#e8e5dc;--ink-soft:#a09b8e;--rule:#38362f;--accent:#e8e5dc;--accent-ink:#141311;--gilt:#a09b8e;--sel-bg:#2a2824;color-scheme:dark}
+:root[data-theme="dark"][data-cad="filosofia"]{--bg:#0f1420;--page:#171e2e;--ink:#e6e8ef;--ink-soft:#9aa3b8;--rule:#2c3650;--accent:#8fa9ff;--accent-ink:#0f1420;--gilt:#d1b06a;--ok:#8fd0b4;--ok-bg:#17302a;--bad:#f09a8e;--bad-bg:#3a1f20;--sel-bg:#232d46;color-scheme:dark}
+:root[data-cad="filosofia"] body{font-size:1.18rem}
+:root[data-cad="filosofia"] h1,:root[data-cad="filosofia"] h2,:root[data-cad="filosofia"] h3{font-weight:700}
+:root[data-cad="filosofia"] .folio::before{border-style:double;border-width:3px;inset:6px}
+:root[data-cad="filosofia"] .stem .text{border-left-style:double;border-left-width:4px}
+
+.filter{margin-top:18px;border:1px solid var(--rule);padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--bg)}
+.f-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.f-links{display:flex;gap:14px}
+.link{background:none;border:0;padding:8px 2px;min-height:44px;font-family:var(--font-display);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:.7rem;color:var(--accent);text-decoration:underline;cursor:pointer}
+.fl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.fchk{width:100%;display:grid;grid-template-columns:1.6rem 2.6rem 1fr auto;gap:10px;align-items:center;text-align:left;font:inherit;color:inherit;background:var(--page);border:1.5px solid var(--rule);padding:8px 12px;min-height:48px;cursor:pointer}
+.fchk[aria-pressed="true"]{border-color:var(--accent);background:var(--sel-bg)}
+.fchk .box{width:1.4rem;height:1.4rem;border:1.5px solid var(--ink-soft);display:inline-flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent-ink)}
+.fchk[aria-pressed="true"] .box{background:var(--accent);border-color:var(--accent)}
+.fchk .idx-t{min-width:0;overflow-wrap:anywhere}
+.f-go{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.filter+.index{margin-top:14px}
+
+/* Tema: biologia (folha, clorofila, lâmina de microscópio) */
+.stem p{white-space:pre-line}
+:root[data-cad="biologia"]{--bg:#c2dcae;--page:#e5f2d0;--ink:#1a2b1f;--ink-soft:#52645a;--rule:#a0c18a;--accent:#1f6b3a;--accent-ink:#f6f9ee;--gilt:#7a9a1e;--ok:#17703c;--ok-bg:#d6ecd8;--bad:#b3392f;--bad-bg:#f6dcd5;--sel-bg:#d2e8b6;
+  --font-display:"Fraunces","Georgia",serif;--font-body:"Nunito Sans","Segoe UI",system-ui,sans-serif}
+@media (prefers-color-scheme: dark){
+  :root[data-cad="biologia"]:not([data-theme="light"]){--bg:#0d1a12;--page:#14251a;--ink:#e4efdf;--ink-soft:#9bb2a2;--rule:#27402f;--accent:#7fd69a;--accent-ink:#0d1a12;--gilt:#c4e05a;--ok:#8fe0a8;--ok-bg:#16352275;--bad:#f2a095;--bad-bg:#3b2020;--sel-bg:#1c3324;color-scheme:dark}
+}
+:root[data-theme="dark"][data-cad="biologia"]{--bg:#0d1a12;--page:#14251a;--ink:#e4efdf;--ink-soft:#9bb2a2;--rule:#27402f;--accent:#7fd69a;--accent-ink:#0d1a12;--gilt:#c4e05a;--ok:#8fe0a8;--ok-bg:#163522;--bad:#f2a095;--bad-bg:#3b2020;--sel-bg:#1c3324;color-scheme:dark}
+:root[data-cad="biologia"] body{background-image:radial-gradient(circle at 20% 20%,rgba(122,154,30,.14) 0 2px,transparent 3px),radial-gradient(circle at 70% 60%,rgba(31,107,58,.12) 0 3px,transparent 4px);background-size:46px 46px,70px 70px}
+:root[data-cad="biologia"] h1,:root[data-cad="biologia"] h2,:root[data-cad="biologia"] h3{font-weight:700;letter-spacing:0}
+:root[data-cad="biologia"] .folio{border-radius:26px 6px 26px 6px}
+:root[data-cad="biologia"] .folio::before{border-radius:22px 4px 22px 4px;border-style:solid;border-width:1px}
+:root[data-cad="biologia"] .opt,:root[data-cad="biologia"] .btn,:root[data-cad="biologia"] .verdict,:root[data-cad="biologia"] .fig,:root[data-cad="biologia"] .filter{border-radius:12px}
+:root[data-cad="biologia"] .opt .l{border-radius:50%}
+:root[data-cad="biologia"] .stem .text{border-left-color:var(--gilt);border-radius:0 8px 8px 0}
+:root[data-cad="biologia"] .fig{background:#fff}
+:root[data-cad="biologia"] .fig img{border-radius:6px}
+
+/* Superfícies com cor (claro e escuro) */
+body{background-image:radial-gradient(900px 420px at 50% -8%,color-mix(in srgb,var(--accent) 16%,transparent),transparent 70%)}
+.folio{background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 5%,var(--page)),var(--page) 55%)}
+.opt{background:color-mix(in srgb,var(--accent) 6%,transparent)}
+.opt:hover:not(:disabled){background:var(--sel-bg)}
+.opt.sel{background:var(--sel-bg)}
+.opt.right{background:var(--ok-bg)}.opt.wrong{background:var(--bad-bg)}
+.index button:nth-child(odd){background:none}
+.filter{background:color-mix(in srgb,var(--accent) 7%,var(--bg))}
+:root[data-cad="biologia"] body{background-image:radial-gradient(circle at 20% 20%,rgba(122,154,30,.18) 0 2px,transparent 3px),radial-gradient(circle at 70% 60%,rgba(31,107,58,.14) 0 3px,transparent 4px),radial-gradient(900px 420px at 50% -8%,color-mix(in srgb,var(--accent) 16%,transparent),transparent 70%)}
+
+/* Tema: química (bancada de laboratório) */
+:root[data-cad="quimica"]{--bg:#bcd8e2;--page:#e1f0f5;--ink:#0f2d3a;--ink-soft:#44646f;--rule:#9ec3d0;--accent:#0b6f8c;--accent-ink:#e8f6fa;--gilt:#b3601a;--ok:#0e7a55;--ok-bg:#cdeadc;--bad:#b3392f;--bad-bg:#f6dcd5;--sel-bg:#c7e2ec;
+  --font-display:"Space Grotesk","Segoe UI",system-ui,sans-serif;--font-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif}
+@media (prefers-color-scheme: dark){
+  :root[data-cad="quimica"]:not([data-theme="light"]){--bg:#07161c;--page:#0e2530;--ink:#dcf0f5;--ink-soft:#8fb3bf;--rule:#1f4352;--accent:#5fd0e8;--accent-ink:#07161c;--gilt:#f0b35a;--ok:#7fe0b4;--ok-bg:#12382c;--bad:#f2a095;--bad-bg:#3b2020;--sel-bg:#173a49;color-scheme:dark}
+}
+:root[data-theme="dark"][data-cad="quimica"]{--bg:#07161c;--page:#0e2530;--ink:#dcf0f5;--ink-soft:#8fb3bf;--rule:#1f4352;--accent:#5fd0e8;--accent-ink:#07161c;--gilt:#f0b35a;--ok:#7fe0b4;--ok-bg:#12382c;--bad:#f2a095;--bad-bg:#3b2020;--sel-bg:#173a49;color-scheme:dark}
+:root[data-cad="quimica"] body{background-image:linear-gradient(color-mix(in srgb,var(--accent) 10%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--accent) 10%,transparent) 1px,transparent 1px),radial-gradient(900px 420px at 50% -8%,color-mix(in srgb,var(--accent) 18%,transparent),transparent 70%);background-size:28px 28px,28px 28px,auto}
+:root[data-cad="quimica"] h1,:root[data-cad="quimica"] h2,:root[data-cad="quimica"] h3{font-weight:700;letter-spacing:-.01em}
+:root[data-cad="quimica"] .folio{border-radius:4px;border-left:6px solid var(--accent)}
+:root[data-cad="quimica"] .folio::before{display:none}
+:root[data-cad="quimica"] .opt .l{border:1.5px solid var(--accent);border-radius:6px;width:1.7rem;height:1.7rem;line-height:1.5rem;text-align:center;padding:0}
+:root[data-cad="quimica"] .opt.sel .l{background:var(--accent)}
+:root[data-cad="quimica"] .fig{background:#fff;border-radius:4px}
+
+.fig .sp{width:100%;background-repeat:no-repeat;background-color:#fff}
+
+/* Tema: física (órbitas, papel milimetrado e céu noturno) */
+:root[data-cad="fisica"]{--bg:#c9cdf0;--page:#e8eafb;--ink:#161a3d;--ink-soft:#4b5080;--rule:#a8aedc;--accent:#2f3aa8;--accent-ink:#eef0ff;--gilt:#c2680a;--ok:#12764f;--ok-bg:#cfeadf;--bad:#b3392f;--bad-bg:#f6dcd5;--sel-bg:#d3d7f5;
+  --font-display:"Exo 2","Segoe UI",system-ui,sans-serif;--font-body:"Lato","Segoe UI",system-ui,sans-serif}
+@media (prefers-color-scheme: dark){
+  :root[data-cad="fisica"]:not([data-theme="light"]){--bg:#0a0c24;--page:#12163a;--ink:#e4e7ff;--ink-soft:#9aa0d6;--rule:#262c63;--accent:#9fb0ff;--accent-ink:#0a0c24;--gilt:#ffc861;--ok:#7fe0b4;--ok-bg:#123a30;--bad:#f2a095;--bad-bg:#3b2020;--sel-bg:#1d2358;color-scheme:dark}
+}
+:root[data-theme="dark"][data-cad="fisica"]{--bg:#0a0c24;--page:#12163a;--ink:#e4e7ff;--ink-soft:#9aa0d6;--rule:#262c63;--accent:#9fb0ff;--accent-ink:#0a0c24;--gilt:#ffc861;--ok:#7fe0b4;--ok-bg:#123a30;--bad:#f2a095;--bad-bg:#3b2020;--sel-bg:#1d2358;color-scheme:dark}
+:root[data-cad="fisica"] body{background-image:repeating-radial-gradient(circle at 100% 0,transparent 0 46px,color-mix(in srgb,var(--accent) 16%,transparent) 46px 47px),repeating-radial-gradient(circle at 0 100%,transparent 0 60px,color-mix(in srgb,var(--gilt) 14%,transparent) 60px 61px)}
+:root[data-cad="fisica"] h1,:root[data-cad="fisica"] h2,:root[data-cad="fisica"] h3{font-weight:700;letter-spacing:.01em}
+:root[data-cad="fisica"] .folio{border-radius:14px}
+:root[data-cad="fisica"] .folio::before{border-radius:10px;border-style:dashed}
+:root[data-cad="fisica"] .opt,:root[data-cad="fisica"] .btn,:root[data-cad="fisica"] .verdict,:root[data-cad="fisica"] .fig,:root[data-cad="fisica"] .filter{border-radius:10px}
+:root[data-cad="fisica"] .opt .l{border-radius:50%}
+:root[data-cad="fisica"] .fig{background:#fff}
+
+/* soma / V-F / explicar */
+.somabar{list-style:none;margin:.4rem 0 0;padding:.5rem .8rem;border:1px dashed var(--rule);border-radius:10px;color:var(--ink-soft);font-size:.95rem}
+.somabar b{color:var(--accent);font-size:1.15rem}
+.opt.vfrow{display:flex;gap:.7rem;align-items:flex-start;width:100%;text-align:left;cursor:default}
+.vfbtns{margin-left:auto;display:flex;gap:.4rem;flex:none}
+.vfb{font:inherit;font-weight:700;min-width:2.6rem;padding:.45rem .6rem;border-radius:9px;border:1.5px solid var(--rule);background:transparent;color:var(--ink);cursor:pointer}
+.vfb.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.vfb.gab{outline:2.5px solid var(--ok);outline-offset:1px}
+.opt.vfrow.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.vfrow.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.explain{margin-top:.9rem;padding-top:.8rem;border-top:1px dashed var(--rule)}
+.exptext{white-space:pre-line;line-height:1.6;margin:.2rem 0 .6rem}
+.expbar{display:flex;gap:.7rem;align-items:center;flex-wrap:wrap}
+.expmsg{font-size:.88rem;color:var(--ink-soft)}
+
+/* Tema: literatura (papel de livro, vinho, tinta) */
+:root[data-cad="literatura"]{--bg:#e2c9c2;--page:#f8ece4;--ink:#2b1a1c;--ink-soft:#6b4d4f;--rule:#cfa99f;--accent:#7a1f3a;--accent-ink:#fbeee9;--gilt:#b8741a;--ok:#25694a;--ok-bg:#d6eadb;--bad:#a8302a;--bad-bg:#f6d9d2;--sel-bg:#efcfc6;
+  --font-display:"Playfair Display","Georgia",serif;--font-body:"Lora","Georgia",serif}
+@media (prefers-color-scheme: dark){
+  :root[data-cad="literatura"]:not([data-theme="light"]){--bg:#1d0f14;--page:#2a161d;--ink:#f3e4de;--ink-soft:#c3a39e;--rule:#4d2a35;--accent:#f0a3b8;--accent-ink:#2a0f19;--gilt:#e8b560;--ok:#8fd9b0;--ok-bg:#16332a;--bad:#f5a095;--bad-bg:#42201f;--sel-bg:#3d2029;color-scheme:dark}
+}
+:root[data-theme="dark"][data-cad="literatura"]{--bg:#1d0f14;--page:#2a161d;--ink:#f3e4de;--ink-soft:#c3a39e;--rule:#4d2a35;--accent:#f0a3b8;--accent-ink:#2a0f19;--gilt:#e8b560;--ok:#8fd9b0;--ok-bg:#16332a;--bad:#f5a095;--bad-bg:#42201f;--sel-bg:#3d2029;color-scheme:dark}
+:root[data-cad="literatura"] body{background-image:radial-gradient(circle at 10% 0,color-mix(in srgb,var(--accent) 14%,transparent),transparent 45%),radial-gradient(circle at 100% 100%,color-mix(in srgb,var(--gilt) 16%,transparent),transparent 50%)}
+:root[data-cad="literatura"] h1,:root[data-cad="literatura"] h2,:root[data-cad="literatura"] h3{font-weight:700}
+:root[data-cad="literatura"] .stem p{line-height:1.65}
+:root[data-cad="literatura"] .stem .text{font-style:italic;border-left:4px double var(--gilt)}
+
+/* Tema: geografia (laranja de mapa, areia, papel milimetrado, régua) */
+:root[data-cad="geografia"]{--bg:#f1cf9d;--page:#fdf0d6;--ink:#33200d;--ink-soft:#80603a;--rule:#e2b273;--accent:#c4570b;--accent-ink:#fff5e6;--gilt:#0e6f7e;--ok:#2a7a3f;--ok-bg:#dcecc9;--bad:#b3322b;--bad-bg:#f8d9cb;--sel-bg:#f7dcae;
+  --font-display:"Fraunces","Georgia",serif;--font-body:"Nunito Sans","Segoe UI",system-ui,sans-serif}
+@media (prefers-color-scheme: dark){
+  :root[data-cad="geografia"]:not([data-theme="light"]){--bg:#1d0f04;--page:#2d180a;--ink:#fbead6;--ink-soft:#d0a77a;--rule:#573418;--accent:#ff9a45;--accent-ink:#1d0f04;--gilt:#58c9d8;--ok:#a4e08a;--ok-bg:#223a14;--bad:#ffa28f;--bad-bg:#44200f;--sel-bg:#43240e;color-scheme:dark}
+}
+:root[data-theme="dark"][data-cad="geografia"]{--bg:#1d0f04;--page:#2d180a;--ink:#fbead6;--ink-soft:#d0a77a;--rule:#573418;--accent:#ff9a45;--accent-ink:#1d0f04;--gilt:#58c9d8;--ok:#a4e08a;--ok-bg:#223a14;--bad:#ffa28f;--bad-bg:#44200f;--sel-bg:#43240e;color-scheme:dark}
+:root[data-cad="geografia"] body{background-image:linear-gradient(color-mix(in srgb,var(--accent) 13%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--accent) 13%,transparent) 1px,transparent 1px);background-size:34px 34px}
+:root[data-cad="geografia"] h1,:root[data-cad="geografia"] h2,:root[data-cad="geografia"] h3{font-weight:700;font-style:italic}
+:root[data-cad="geografia"] .folio{border-radius:4px;box-shadow:6px 6px 0 color-mix(in srgb,var(--accent) 35%,transparent)}
+:root[data-cad="geografia"] .folio::before{border:2px dashed var(--accent);border-radius:2px;inset:6px;opacity:.55}
+:root[data-cad="geografia"] .q-head .eyebrow::before,:root[data-cad="geografia"] .eyebrow:first-child::before{content:"⌖ ";color:var(--accent)}
+:root[data-cad="geografia"] .opt,:root[data-cad="geografia"] .btn,:root[data-cad="geografia"] .verdict,:root[data-cad="geografia"] .fig,:root[data-cad="geografia"] .filter{border-radius:3px}
+:root[data-cad="geografia"] .opt .l{border-radius:3px;background:var(--accent);color:var(--accent-ink);width:1.9rem;height:1.9rem;display:inline-grid;place-items:center;font-weight:800}
+:root[data-cad="geografia"] .opt{border-left:6px solid var(--accent)}
+:root[data-cad="geografia"] .opt.right{border-left-color:var(--ok)}
+:root[data-cad="geografia"] .opt.wrong{border-left-color:var(--bad)}
+:root[data-cad="geografia"] .stem .text{border-left:4px dotted var(--gilt);font-style:italic}
+:root[data-cad="geografia"] .fig{background:#fff;border:2px solid var(--accent)}
+:root[data-cad="geografia"] .progress i,:root[data-cad="geografia"] .bar i{background-image:repeating-linear-gradient(90deg,var(--accent) 0 6px,color-mix(in srgb,var(--accent) 55%,#fff) 6px 8px)}
+
+/* Tema: sociologia (cinza, pontilhado de rede, tom de roda de conversa) */
+:root[data-cad="sociologia"]{--bg:#cdcdd0;--page:#ececed;--ink:#1f2023;--ink-soft:#5f6168;--rule:#b1b2b7;--accent:#44474e;--accent-ink:#f4f4f5;--gilt:#8a6232;--ok:#16745c;--ok-bg:#d3efe6;--bad:#b3322b;--bad-bg:#f6dcd6;--sel-bg:#dcdcdf;
+  --font-display:"Space Grotesk","Segoe UI",system-ui,sans-serif;--font-body:"Source Serif 4","Georgia",serif}
+@media (prefers-color-scheme: dark){
+  :root[data-cad="sociologia"]:not([data-theme="light"]){--bg:#101012;--page:#1b1b1e;--ink:#ededef;--ink-soft:#a4a5ab;--rule:#35363b;--accent:#c8cad1;--accent-ink:#101012;--gilt:#d4b27a;--ok:#7fe3c0;--ok-bg:#12372f;--bad:#ff9d9d;--bad-bg:#40201f;--sel-bg:#2a2b30;color-scheme:dark}
+}
+:root[data-theme="dark"][data-cad="sociologia"]{--bg:#101012;--page:#1b1b1e;--ink:#ededef;--ink-soft:#a4a5ab;--rule:#35363b;--accent:#c8cad1;--accent-ink:#101012;--gilt:#d4b27a;--ok:#7fe3c0;--ok-bg:#12372f;--bad:#ff9d9d;--bad-bg:#40201f;--sel-bg:#2a2b30;color-scheme:dark}
+:root[data-cad="sociologia"] body{background-image:radial-gradient(circle,color-mix(in srgb,var(--accent) 26%,transparent) 1.6px,transparent 2px),radial-gradient(circle at 15% 8%,transparent 0 70px,color-mix(in srgb,var(--accent) 12%,transparent) 71px 72px,transparent 73px 120px,color-mix(in srgb,var(--gilt) 12%,transparent) 121px 122px,transparent 123px);background-size:26px 26px,auto}
+:root[data-cad="sociologia"] h1,:root[data-cad="sociologia"] h2,:root[data-cad="sociologia"] h3{font-weight:700;letter-spacing:-.01em}
+:root[data-cad="sociologia"] .folio{border-radius:26px}
+:root[data-cad="sociologia"] .folio::before{border:2px dotted var(--accent);border-radius:20px;inset:7px;opacity:.5}
+:root[data-cad="sociologia"] .opt,:root[data-cad="sociologia"] .btn,:root[data-cad="sociologia"] .verdict,:root[data-cad="sociologia"] .filter{border-radius:20px}
+:root[data-cad="sociologia"] .btn{border-radius:999px}
+:root[data-cad="sociologia"] .opt .l{border-radius:50%;background:color-mix(in srgb,var(--accent) 18%,transparent);width:2rem;height:2rem;display:inline-grid;place-items:center}
+:root[data-cad="sociologia"] .stem .text{border-left:0;background:color-mix(in srgb,var(--accent) 10%,transparent);border-radius:18px 18px 18px 4px;padding:.9rem 1.1rem}
+:root[data-cad="sociologia"] .fig{background:#fff;border-radius:16px}
+:root[data-cad="sociologia"] .q-head .tag{border-radius:999px}
+
+.opts.letters{display:flex;flex-direction:row;flex-wrap:wrap;gap:.6rem;padding:0;list-style:none}
+.opts.letters li{flex:1 1 4.2rem}
+.opts.letters .opt{justify-content:center;padding:.7rem .4rem}
+.opts.letters .opt .t{display:none}
+.opts.letters .opt .l{margin:0;font-size:1.25rem}
+
+/* Tema: matemática (caderno quadriculado amarelo, margem vermelha, lápis azul) */
+:root[data-cad="matematica"]{--bg:#f0dc6e;--page:#fffbe0;--ink:#2a2208;--ink-soft:#7a6a2c;--rule:#dcc65a;--accent:#8a5a00;--accent-ink:#fff9dd;--gilt:#1f5fbf;--ok:#2b7a3d;--ok-bg:#dcf0c8;--bad:#c0322b;--bad-bg:#fbdcd2;--sel-bg:#fbeeaa;
+  --font-display:"Sora","Segoe UI",system-ui,sans-serif;--font-body:"Karla","Segoe UI",system-ui,sans-serif}
+@media (prefers-color-scheme: dark){
+  :root[data-cad="matematica"]:not([data-theme="light"]){--bg:#17130a;--page:#241e0d;--ink:#fbf2cc;--ink-soft:#c9b56e;--rule:#4a3e17;--accent:#ffd23f;--accent-ink:#17130a;--gilt:#74b6ff;--ok:#a7e38c;--ok-bg:#1f3314;--bad:#ff9d8f;--bad-bg:#44200f;--sel-bg:#3a3010;color-scheme:dark}
+}
+:root[data-theme="dark"][data-cad="matematica"]{--bg:#17130a;--page:#241e0d;--ink:#fbf2cc;--ink-soft:#c9b56e;--rule:#4a3e17;--accent:#ffd23f;--accent-ink:#17130a;--gilt:#74b6ff;--ok:#a7e38c;--ok-bg:#1f3314;--bad:#ff9d8f;--bad-bg:#44200f;--sel-bg:#3a3010;color-scheme:dark}
+:root[data-cad="matematica"] body{background-image:linear-gradient(color-mix(in srgb,var(--gilt) 20%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--gilt) 20%,transparent) 1px,transparent 1px);background-size:22px 22px}
+:root[data-cad="matematica"] h1,:root[data-cad="matematica"] h2,:root[data-cad="matematica"] h3{font-weight:700}
+:root[data-cad="matematica"] .folio{border-radius:2px;border-left:0;background-image:linear-gradient(90deg,transparent 22px,#d94a4a 22px 24px,transparent 24px),linear-gradient(var(--page),var(--page));padding-left:34px;padding-right:12px}
+:root[data-cad="matematica"] .stem .fig{margin-left:-6px;margin-right:-4px}
+:root[data-cad="matematica"] .folio::before{display:none}
+:root[data-cad="matematica"] .opt,:root[data-cad="matematica"] .btn,:root[data-cad="matematica"] .verdict,:root[data-cad="matematica"] .fig,:root[data-cad="matematica"] .filter{border-radius:2px}
+:root[data-cad="matematica"] .opt .l{font-family:"Sora",sans-serif;font-weight:800;color:var(--gilt)}
+:root[data-cad="matematica"] .fig{background:#fff;border:1px solid var(--rule)}
+.fig.zoomable{cursor:zoom-in;position:relative}
+.fig.zoomable::after{content:"toque para ampliar";position:absolute;right:6px;bottom:4px;font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;background:rgba(0,0,0,.55);color:#fff;padding:2px 6px;border-radius:8px}
+.fig.zoomable.zoomed{overflow-x:auto;cursor:zoom-out;width:100%!important}
+.fig.zoomable.zoomed .sp{max-width:none!important;width:var(--w)}
+.fig.zoomable.zoomed::after{content:"toque para reduzir"}
+.gset{margin-top:.8rem;font-size:.9rem}
+.gset summary{cursor:pointer;color:var(--ink-soft)}
+.gin{width:100%;box-sizing:border-box;margin:.4rem 0;padding:.6rem .7rem;border:1.5px solid var(--rule);border-radius:8px;background:var(--page);color:var(--ink);font:inherit}
+.backup{margin-top:1.4rem;padding-top:1rem;border-top:1px dashed var(--rule)}
