@@ -331,6 +331,8 @@ body{background-image:radial-gradient(900px 420px at 50% -8%,color-mix(in srgb,v
 .fig.zoomable.zoomed::after{content:"toque para reduzir"}
 .gset{margin-top:.7rem;font-size:.92rem;color:var(--ink-soft)}.gset summary{cursor:pointer}.gset a{color:var(--accent)}
 .gsrow{display:flex;gap:.5rem;flex-wrap:wrap}.gkey{flex:1 1 14rem;min-width:0;font:inherit;padding:.55rem .7rem;border:1.5px solid var(--rule);background:var(--page);color:var(--ink);border-radius:8px}
+.bkp{text-align:center;font-size:.72rem;color:var(--ink-soft);opacity:.55;margin:14px 0 0}.bkp:hover{opacity:.9}.bkp button{background:none;border:0;padding:4px 2px;font:inherit;color:inherit;text-decoration:underline;cursor:pointer}
+.bkpanel{max-width:28rem;margin:8px auto 0;font-size:.78rem;color:var(--ink-soft);text-align:center}.bkpanel textarea{width:100%;font:.72rem monospace;background:var(--page);color:var(--ink);border:1px solid var(--rule);border-radius:6px;padding:6px}.bkpanel button{background:none;border:0;padding:4px 2px;font:inherit;color:var(--accent);text-decoration:underline;cursor:pointer}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -378,7 +380,7 @@ function label(k){var q=QS[k],a=aulaOf(q.aula);return cad.un+" "+a.rom+" · ques
 function orn(){return '<div class="orn"><span>'+cad.orn+'</span></div>';}
 
 function top(){
-  if(st.view==="hub")return '<div class="top"><span class="brand static">'+(curGrp?esc(grpOf(curGrp).nome):'Cadernos de Estudo')+'</span><div class="tools">'+(curGrp?'<button class="btn ghost" data-a="allhub">Matérias</button>':'')+'<button class="btn ghost" data-a="export">Salvar progresso</button><button class="btn ghost" data-a="import">Restaurar</button><button class="btn ghost" data-a="theme" aria-label="Alternar tema claro e escuro">Tema</button></div></div>';
+  if(st.view==="hub")return '<div class="top"><span class="brand static">'+(curGrp?esc(grpOf(curGrp).nome):'Cadernos de Estudo')+'</span><div class="tools">'+(curGrp?'<button class="btn ghost" data-a="allhub">Matérias</button>':'')+'<button class="btn ghost" data-a="theme" aria-label="Alternar tema claro e escuro">Tema</button></div></div>';
   var fin=(st.view==="q"||st.view==="inter")?'<button class="btn" data-a="finish">Finalizar estudo</button>':'';
   return '<div class="top"><button class="brand" data-a="home">'+esc(cad.titulo)+'</button>'+
   '<div class="tools">'+fin+'<button class="btn ghost" data-a="hub">Cadernos</button><button class="btn ghost" data-a="theme" aria-label="Alternar tema claro e escuro">Tema</button></div></div>';
@@ -554,12 +556,29 @@ async function doExplain(q,btn){
   if(!done){msg.textContent="Não consegui explicar. Último erro: "+lastErr.slice(0,300)+(net?" — Confira a internet e se a chave está correta.":" — Confira se a chave foi copiada inteira.");}
   btn.disabled=false;
 }
-function exportAll(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k.indexOf("caderno-")===0)o[k]=localStorage.getItem(k);}}catch(e){}
-  var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:"application/json"}));a.download="progresso-cadernos.json";document.body.appendChild(a);a.click();a.remove();}
-function importAll(){var f=document.createElement('input');f.type="file";f.accept=".json,application/json";
-  f.onchange=function(){var fl=f.files&&f.files[0];if(!fl)return;var rd=new FileReader();rd.onload=function(){try{var o=JSON.parse(rd.result),n=0;
-    Object.keys(o).forEach(function(k){if(k.indexOf("caderno-")===0){localStorage.setItem(k,o[k]);n++;}});
-    alert(n+" itens de progresso restaurados.");location.reload();}catch(e){alert("Arquivo inválido.");}};rd.readAsText(fl);};f.click();}
+function allProg(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k.indexOf("caderno-")===0)o[k]=localStorage.getItem(k);}}catch(e){}return JSON.stringify(o);}
+function applyProg(txt){try{var o=JSON.parse(txt),n=0;Object.keys(o).forEach(function(k){if(k.indexOf("caderno-")===0&&typeof o[k]==="string"){localStorage.setItem(k,o[k]);n++;}});
+  if(!n){alert("Nada de progresso encontrado nesse texto.");return;}alert("Progresso restaurado ("+n+" cadernos/itens).");location.reload();}catch(e){alert("Texto ou arquivo inválido.");}}
+function bkpPanel(mode){
+  var old=document.querySelector('.bkpanel');if(old)old.remove();
+  var d=document.createElement('div');d.className='bkpanel';
+  if(mode==="export"){var s=allProg();
+    d.innerHTML='<p>Copie o texto abaixo (ou baixe o arquivo) e guarde. Para restaurar, use “importar”.</p><textarea readonly rows="4"></textarea><div><button data-b="copy">copiar</button> · <button data-b="dl">baixar arquivo</button> · <button data-b="close">fechar</button></div>';
+    d.querySelector('textarea').value=s;
+    d.onclick=function(e){var t=e.target.getAttribute&&e.target.getAttribute('data-b');if(!t)return;
+      if(t==="copy"){var ta=d.querySelector('textarea');ta.select();try{navigator.clipboard.writeText(s);}catch(x){try{document.execCommand('copy');}catch(y){}}e.target.textContent="copiado";}
+      else if(t==="dl"){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([s],{type:"application/json"}));a.download="progresso-cadernos.json";document.body.appendChild(a);a.click();a.remove();}
+      else d.remove();};
+  }else{
+    d.innerHTML='<p>Escolha o arquivo de progresso ou cole o texto exportado.</p><textarea rows="4" placeholder="Cole aqui o texto do progresso"></textarea><div><button data-b="apply">restaurar texto colado</button> · <button data-b="file">escolher arquivo</button> · <button data-b="close">fechar</button></div>';
+    d.onclick=function(e){var t=e.target.getAttribute&&e.target.getAttribute('data-b');if(!t)return;
+      if(t==="apply")applyProg(d.querySelector('textarea').value);
+      else if(t==="file"){var f=document.createElement('input');f.type="file";f.accept=".json,application/json,text/plain";f.onchange=function(){var fl=f.files&&f.files[0];if(!fl)return;var rd=new FileReader();rd.onload=function(){applyProg(rd.result);};rd.readAsText(fl);};f.click();}
+      else d.remove();};
+  }
+  var bk=document.querySelector('.bkp');if(bk)bk.insertAdjacentElement('afterend',d);}
+function exportAll(){bkpPanel("export");}
+function importAll(){bkpPanel("import");}
 function lastInFlow(){return st.mode==="rev"?st.qp+1>=st.queue.length:st.i+1>=QS.length;}
 function question(){
   var q=QS[st.i],a=aulaOf(q.aula),pos=posIn(q),cnt=stats(a.n).t;
@@ -633,6 +652,7 @@ function render(){
   else if(st.view==="result")result();
   else if(st.view==="revres")revResult();
   else if(st.view==="fin")finView();
+  if(st.view!=="q")app.insertAdjacentHTML('beforeend','<p class="bkp">Progresso salvo automaticamente neste navegador · <button data-a="export">exportar</button> · <button data-a="import">importar</button></p>');
 }
 function goto(i,withInter){
   st.mode="main";st.i=i;st.sel=null;st.done=false;
