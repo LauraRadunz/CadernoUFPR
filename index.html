@@ -1,4 +1,5 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Cadernos de Estudo</title><style>*,*::before,*::after{box-sizing:border-box}html,body{margin:0}body{min-height:100vh}</style></head><body>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Cadernos de Estudo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:wght@500;600;700&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=Fraunces:wght@600;700&family=Space+Grotesk:wght@500;700&family=Exo+2:wght@600;700&family=Playfair+Display:wght@600;700&family=Sora:wght@600;700;800&family=Karla:ital,wght@0,400;0,600;1,400&family=Lora:ital,wght@0,400;0,600;1,400&family=Lato:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -328,10 +329,8 @@ body{background-image:radial-gradient(900px 420px at 50% -8%,color-mix(in srgb,v
 .fig.zoomable.zoomed{overflow-x:auto;cursor:zoom-out;width:100%!important}
 .fig.zoomable.zoomed .sp{max-width:none!important;width:var(--w)}
 .fig.zoomable.zoomed::after{content:"toque para reduzir"}
-.gset{margin-top:.8rem;font-size:.9rem}
-.gset summary{cursor:pointer;color:var(--ink-soft)}
-.gin{width:100%;box-sizing:border-box;margin:.4rem 0;padding:.6rem .7rem;border:1.5px solid var(--rule);border-radius:8px;background:var(--page);color:var(--ink);font:inherit}
-.backup{margin-top:1.4rem;padding-top:1rem;border-top:1px dashed var(--rule)}
+.gset{margin-top:.7rem;font-size:.92rem;color:var(--ink-soft)}.gset summary{cursor:pointer}.gset a{color:var(--accent)}
+.gsrow{display:flex;gap:.5rem;flex-wrap:wrap}.gkey{flex:1 1 14rem;min-width:0;font:inherit;padding:.55rem .7rem;border:1.5px solid var(--rule);background:var(--page);color:var(--ink);border-radius:8px}
 </style>
 
 <div class="wrap" id="app"></div>
@@ -379,7 +378,7 @@ function label(k){var q=QS[k],a=aulaOf(q.aula);return cad.un+" "+a.rom+" · ques
 function orn(){return '<div class="orn"><span>'+cad.orn+'</span></div>';}
 
 function top(){
-  if(st.view==="hub")return '<div class="top"><span class="brand static">'+(curGrp?esc(grpOf(curGrp).nome):'Cadernos de Estudo')+'</span><div class="tools">'+(curGrp?'<button class="btn ghost" data-a="allhub">Matérias</button>':'')+'<button class="btn ghost" data-a="theme" aria-label="Alternar tema claro e escuro">Tema</button></div></div>';
+  if(st.view==="hub")return '<div class="top"><span class="brand static">'+(curGrp?esc(grpOf(curGrp).nome):'Cadernos de Estudo')+'</span><div class="tools">'+(curGrp?'<button class="btn ghost" data-a="allhub">Matérias</button>':'')+'<button class="btn ghost" data-a="export">Salvar progresso</button><button class="btn ghost" data-a="import">Restaurar</button><button class="btn ghost" data-a="theme" aria-label="Alternar tema claro e escuro">Tema</button></div></div>';
   var fin=(st.view==="q"||st.view==="inter")?'<button class="btn" data-a="finish">Finalizar estudo</button>':'';
   return '<div class="top"><button class="brand" data-a="home">'+esc(cad.titulo)+'</button>'+
   '<div class="tools">'+fin+'<button class="btn ghost" data-a="hub">Cadernos</button><button class="btn ghost" data-a="theme" aria-label="Alternar tema claro e escuro">Tema</button></div></div>';
@@ -408,9 +407,7 @@ function hub(){
       h+=spine({card:gg.card,emblema:gg.emblema,nome:gg.nome,sub:gg.sub+' · '+ms.length+(ms.length===1?' caderno':' cadernos')},p,"grp",gg.id,"Ver cadernos");
     });
   }
-  h+='</ul>';
-  if(!g)h+='<div class="backup"><p class="small">Seu progresso fica salvo só neste navegador. Para levar para outro aparelho, exporte e importe.</p><div class="expbar"><button class="btn ghost" data-a="export">Exportar progresso</button><button class="btn ghost" data-a="import">Importar progresso</button></div></div>';
-  h+='</section>';
+  h+='</ul></section>';
   app.innerHTML=h;
 }
 function home(){
@@ -486,76 +483,83 @@ function corrHtml(q){
   if(q.type==="vf")return '<p><span class="lab">Gabarito</span><b>'+q.ans.split('').join(' – ')+'</b> (de cima para baixo)</p>';
   return '<p><span class="lab">Alternativa correta</span><b>'+L[q.ans].toUpperCase()+')</b> '+esc(q.opts[q.ans])+'</p>';}
 function qPlain(q){
+  if(q.imgq){var gl=q.type==="soma"?("soma "+q.ans):L[q.ans].toUpperCase();return "(A questão completa, com fórmulas e alternativas, está na imagem anexa. Texto extraído do PDF, que pode estar com fórmulas desformatadas:) "+q.tx+"\nGabarito: "+gl+". Resposta marcada pelo aluno: "+(q.type==="soma"?(st.sel||0):(st.sel===null?"-":L[st.sel].toUpperCase()));}
   var t=q.blocks.filter(function(b){return b[0]!=="img";}).map(function(b){return b[1];}).join("\n");
-  var o,r;
-  if(q.type==="soma"){
-    o=q.opts.map(function(x,k){return (q.vals[k]<10?'0':'')+q.vals[k]+') '+x;}).join("\n");
-    r="Gabarito: soma "+q.ans+". Soma marcada pelo aluno: "+(st.sel||0);
-  }else if(q.type==="vf"){
-    o=q.opts.map(function(x,k){return (k+1)+') '+x;}).join("\n");
-    r="Gabarito (V/F em ordem): "+q.ans+". Resposta do aluno: "+st.sel;
-  }else{
-    o=q.opts.map(function(x,k){return L[k].toUpperCase()+') '+x;}).join("\n");
-    r="Gabarito: "+L[q.ans].toUpperCase()+". Alternativa marcada pelo aluno: "+(st.sel===null?"nenhuma":L[st.sel].toUpperCase());
-  }
-  if(q.imgq)return "(O enunciado completo, com fórmulas, figuras e alternativas, está na IMAGEM anexa; leia a imagem com atenção. Texto extraído do PDF, que pode ter fórmulas desformatadas:)\n"+q.tx+"\n\n"+r;
-  return t+(q.img?"\n[Há uma figura anexa.]":"")+"\n\n"+o+"\n\n"+r;}
-var EXP={},GKEY="gemini-key-v1",GMODEL="gemini-2.5-flash";
-function gKey(){try{return localStorage.getItem(GKEY)||"";}catch(e){return "";}}
+  var o;
+  if(q.type==="soma")o=q.opts.map(function(x,k){return (q.vals[k]<10?'0':'')+q.vals[k]+') '+x;}).join("\n")+"\nGabarito: soma "+q.ans+". Soma marcada pelo aluno: "+(st.sel||0);
+  else if(q.type==="vf")o=q.opts.map(function(x,k){return (k+1)+') '+x;}).join("\n")+"\nGabarito (V/F em ordem): "+q.ans+". Resposta do aluno: "+st.sel;
+  else o=q.opts.map(function(x,k){return L[k]+') '+x;}).join("\n")+"\nGabarito: "+L[q.ans]+". Alternativa marcada pelo aluno: "+(st.sel===null?"-":L[st.sel]);
+  return t+"\n\n"+o;}
+var EXP={},GKEY="gemini-key-v1",GOK="gemini-ok-v1";
 function expLoad(){try{return JSON.parse(localStorage.getItem("caderno-exp-v1")||"{}");}catch(e){return {};}}
 function expSave(id,t){try{var o=expLoad();o[id]=t;localStorage.setItem("caderno-exp-v1",JSON.stringify(o));}catch(e){}}
+function gkey(){try{return localStorage.getItem(GKEY)||"";}catch(e){return "";}}
 function explainBox(q){
-  var id=cad.id+":"+q.id,t=EXP[id]||expLoad()[id]||"",k=gKey();
+  var id=cad.id+":"+q.id,t=EXP[id]||expLoad()[id]||"",k=gkey();
   var h='<div class="explain" data-eid="'+esc(id)+'">';
   if(t)h+='<p><span class="lab">Explicação do Gemini</span></p><div class="exptext">'+esc(t)+'</div>';
-  h+='<div class="expbar"><button class="btn ghost" data-a="explain" data-id="'+q.id+'">'+(t?'Explicar de novo':'Explicar com o Gemini')+'</button><span class="expmsg"></span></div>'+
-  '<details class="gset"'+(k?'':' open')+'><summary>Chave do Gemini '+(k?'(salva neste navegador)':'(necessária, é grátis)')+'</summary>'+
-  '<p class="small">Crie uma chave grátis em aistudio.google.com/apikey e cole abaixo. Ela fica só no seu navegador.</p>'+
-  '<input type="password" class="gin" autocomplete="off" placeholder="Cole sua chave do Gemini">'+
-  '<div class="expbar"><button class="btn ghost" data-a="gsave">Salvar chave</button>'+(k?'<button class="btn ghost" data-a="gdel">Apagar chave</button>':'')+'</div></details></div>';
+  h+='<div class="expbar"><button class="btn ghost" data-a="explain" data-id="'+q.id+'">'+(t?'Explicar de novo':'Explicar com o Gemini')+'</button><span class="expmsg"></span></div>';
+  h+='<details class="gset"'+(k?'':' open')+'><summary>'+(k?'Chave do Gemini salva neste navegador':'Cole aqui sua chave do Gemini (grátis)')+'</summary>'+
+    '<p class="small">Crie a chave em <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>. Ela fica só neste navegador e é enviada apenas ao Google.</p>'+
+    '<div class="gsrow"><input type="password" class="gkey" autocomplete="off" spellcheck="false" placeholder="AIza… ou AQ.…" value="'+esc(k)+'"><button class="btn ghost" data-a="gsave">Salvar</button>'+(k?'<button class="btn ghost" data-a="gdel">Apagar</button>':'')+'</div></details></div>';
   return h;}
-function blobToB64(bl){return new Promise(function(res){var r=new FileReader();r.onload=function(){res(String(r.result).split(",")[1]||"");};r.onerror=function(){res("");};r.readAsDataURL(bl);});}
-function cropBlob(b){
-  return new Promise(function(res){var im=new Image();im.onload=function(){try{var c=document.createElement('canvas');c.width=b[2];c.height=b[3];c.getContext('2d').drawImage(im,0,b[4],b[2],b[3],0,0,b[2],b[3]);c.toBlob(function(bl){res(bl);},'image/jpeg',.9);}catch(e){res(null);}};im.onerror=function(){res(null);};im.src=b[1];});}
-function fetchBlob(u){return fetch(u).then(function(r){return r.ok?r.blob():null;}).catch(function(){return null;});}
-async function qImages(q){
-  var out=[],bs=q.blocks.filter(function(x){return x[0]==="img";});
-  for(var i=0;i<bs.length;i++){var b=bs[i],bl=b.length>2?await cropBlob(b):await fetchBlob(b[1]);if(bl)out.push(bl);}
-  if(q.img){var bl2=await fetchBlob(q.img);if(bl2)out.push(bl2);}
-  var res=[];for(var j=0;j<out.length;j++){var d=await blobToB64(out[j]);if(d)res.push({inline_data:{mime_type:out[j].type||"image/jpeg",data:d}});}
-  return res;}
+function qImages(q){
+  var bs=q.blocks.filter(function(x){return x[0]==="img";}).slice(0,4);
+  return Promise.all(bs.map(function(b){return new Promise(function(res){
+    var im=new Image();
+    im.onload=function(){try{var sp=b.length>2,c=document.createElement('canvas');
+      if(sp){c.width=b[2];c.height=b[3];c.getContext('2d').drawImage(im,0,b[4],b[2],b[3],0,0,b[2],b[3]);}
+      else{c.width=im.naturalWidth;c.height=im.naturalHeight;c.getContext('2d').drawImage(im,0,0);}
+      res(c.toDataURL('image/jpeg',.85).split(',')[1]);}catch(e){res(null);}};
+    im.onerror=function(){res(null);};im.src=b[1];});})).then(function(a){return a.filter(Boolean);});}
+function gCands(key){
+  var models=["gemini-2.5-flash","gemini-flash-latest","gemini-2.5-flash-lite","gemini-3-flash-preview"],c=[];
+  var gl=function(m){return {n:"api:"+m,u:"https://generativelanguage.googleapis.com/v1beta/models/"+m+":generateContent"};};
+  var vx=function(m){return {n:"vx:"+m,u:"https://aiplatform.googleapis.com/v1/publishers/google/models/"+m+":generateContent"};};
+  var first=key.indexOf("AIza")===0?[gl,vx]:[vx,gl];
+  first.forEach(function(f){models.forEach(function(m){c.push(f(m));});});
+  var ok="";try{ok=localStorage.getItem(GOK)||"";}catch(e){}
+  c.sort(function(a,b){return (b.n===ok)-(a.n===ok);});
+  return c;}
 async function doExplain(q,btn){
-  var box=btn.closest('.explain'),msg=box.querySelector('.expmsg'),id=cad.id+":"+q.id,key=gKey();
-  if(!key){msg.textContent="Cole sua chave do Gemini abaixo e toque em “Salvar chave”.";var dd=box.querySelector('details');if(dd)dd.open=true;return;}
-  btn.disabled=true;msg.textContent="Chamando o Gemini…";
-  var tx=box.querySelector('.exptext');
-  if(!tx){box.insertAdjacentHTML('afterbegin','<p><span class="lab">Explicação do Gemini</span></p><div class="exptext"></div>');tx=box.querySelector('.exptext');}
-  var prompt="Você é um professor de cursinho preparando um aluno para o vestibular da UFPR. Matéria/caderno: "+cad.nome+". Explique a questão abaixo de forma completinha e bem explicadinha, em português do Brasil, em texto corrido, com parágrafos curtos e sem markdown pesado: 1) o que a questão pede e o conceito necessário; 2) por que a resposta correta está certa (com os passos de cálculo, se houver); 3) por que cada uma das outras alternativas está errada (ou, se for somatório ou V/F, o que torna cada item verdadeiro ou falso); 4) uma dica para não errar de novo. Use as imagens anexas como parte do enunciado.\n\nQUESTÃO COMPLETA:\n"+qPlain(q);
-  try{
-    var parts=[{text:prompt}].concat(await qImages(q));
-    var r=await fetch("https://generativelanguage.googleapis.com/v1beta/models/"+GMODEL+":generateContent",{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({contents:[{role:"user",parts:parts}],generationConfig:{temperature:.4}})});
-    var j={};try{j=await r.json();}catch(e){}
-    if(!r.ok){var er=new Error((j.error&&j.error.message)||"");er.status=r.status;throw er;}
-    var text=((((j.candidates||[])[0]||{}).content||{}).parts||[]).map(function(p){return p.text||"";}).join("").trim();
-    if(!text)throw new Error("vazio");
-    tx.textContent=text;EXP[id]=text;expSave(id,text);msg.textContent="";btn.textContent="Explicar de novo";
-  }catch(e){
-    var s=e&&e.status;
-    msg.textContent=(s===400||s===403)?"A chave não foi aceita pelo Gemini. Confira se copiou inteira.":(s===429)?"Limite grátis do Gemini atingido. Espere um pouco e tente de novo.":(s===404)?"O modelo do Gemini não foi encontrado.":(e instanceof TypeError)?"Sem conexão com o Gemini. Se estiver dentro do claude.ai, abra pelo link do GitHub Pages.":"Não consegui explicar agora. Tente de novo.";
-    if(!tx.textContent)tx.parentNode&&tx.previousElementSibling&&tx.previousElementSibling.remove&&(tx.previousElementSibling.remove(),tx.remove());
+  var box=btn.closest('.explain'),msg=box.querySelector('.expmsg'),id=cad.id+":"+q.id;
+  var key=gkey();
+  if(!key){msg.textContent="Primeiro cole sua chave do Gemini aqui embaixo e clique em Salvar.";var d=box.querySelector('.gset');if(d)d.open=true;return;}
+  btn.disabled=true;msg.textContent="Pedindo ao Gemini…";
+  var prompt="Você é um professor de cursinho preparando um aluno para o vestibular da UFPR. Matéria/caderno: "+cad.nome+". Explique a questão abaixo de forma completinha e bem explicadinha, em português do Brasil, em texto corrido e curto por parágrafos (sem markdown pesado, sem asteriscos): 1) o que a questão pede e o conceito necessário; 2) por que a resposta correta está certa; 3) por que cada uma das outras alternativas está errada (ou, se for somatório/V-F, o que torna cada item verdadeiro ou falso); 4) uma dica para não errar de novo. As figuras da questão vão anexas como imagem: descreva e use o que elas mostram.\n\nQUESTÃO:\n"+qPlain(q);
+  var parts=[{text:prompt}];
+  try{(await qImages(q)).forEach(function(b){parts.push({inlineData:{mimeType:"image/jpeg",data:b}});});}catch(e){}
+  var body=JSON.stringify({contents:[{role:"user",parts:parts}],generationConfig:{temperature:.4}});
+  var cands=gCands(key),lastErr="",net=false,done=false;
+  for(var i=0;i<cands.length&&!done;i++){
+    var c=cands[i];
+    try{
+      var r=await fetch(c.u,{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:body});
+      var j=null;try{j=await r.json();}catch(e){}
+      if(r.ok&&j){
+        var cd=j.candidates&&j.candidates[0],tx=cd&&cd.content&&cd.content.parts?cd.content.parts.map(function(p){return p.text||"";}).join(""):"";
+        if(!tx){lastErr="O Gemini não devolveu texto"+(cd&&cd.finishReason?" ("+cd.finishReason+")":"")+".";continue;}
+        tx=tx.replace(/\*\*/g,"").replace(/^#+\s*/gm,"").trim();
+        var el=box.querySelector('.exptext');
+        if(!el){box.insertAdjacentHTML('afterbegin','<p><span class="lab">Explicação do Gemini</span></p><div class="exptext"></div>');el=box.querySelector('.exptext');}
+        el.textContent=tx;EXP[id]=tx;expSave(id,tx);try{localStorage.setItem(GOK,c.n);}catch(e){}
+        msg.textContent="";btn.textContent="Explicar de novo";done=true;
+      }else{
+        var em=(j&&j.error&&j.error.message)||("erro "+r.status);
+        lastErr="["+c.n+"] "+r.status+": "+em;
+        if(r.status===429){msg.textContent="Limite grátis do Gemini atingido. Espere um pouco e tente de novo. ("+em.slice(0,140)+")";done=true;break;}
+      }
+    }catch(e){net=true;lastErr="["+c.n+"] sem resposta (rede ou bloqueio do navegador): "+(e&&e.message||e);}
   }
+  if(!done){msg.textContent="Não consegui explicar. Último erro: "+lastErr.slice(0,300)+(net?" — Confira a internet e se a chave está correta.":" — Confira se a chave foi copiada inteira.");}
   btn.disabled=false;
 }
-function exportAll(){
-  var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k.indexOf("caderno-")===0)o[k]=localStorage.getItem(k);}}catch(e){}
-  var bl=new Blob([JSON.stringify(o)],{type:"application/json"}),a=document.createElement("a");
-  a.href=URL.createObjectURL(bl);a.download="cadernos-progresso-"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(a);a.click();a.remove();}
-function importAll(){
-  var inp=document.createElement("input");inp.type="file";inp.accept="application/json,.json";
-  inp.onchange=function(){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(){
-    try{var o=JSON.parse(r.result),n=0;Object.keys(o).forEach(function(k){if(k.indexOf("caderno-")===0&&typeof o[k]==="string"){localStorage.setItem(k,o[k]);n++;}});
-      alert(n+" itens de progresso importados. A página vai recarregar.");location.reload();}catch(e){alert("Arquivo inválido.");}};r.readAsText(f);};
-  inp.click();}
+function exportAll(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k.indexOf("caderno-")===0)o[k]=localStorage.getItem(k);}}catch(e){}
+  var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(o)],{type:"application/json"}));a.download="progresso-cadernos.json";document.body.appendChild(a);a.click();a.remove();}
+function importAll(){var f=document.createElement('input');f.type="file";f.accept=".json,application/json";
+  f.onchange=function(){var fl=f.files&&f.files[0];if(!fl)return;var rd=new FileReader();rd.onload=function(){try{var o=JSON.parse(rd.result),n=0;
+    Object.keys(o).forEach(function(k){if(k.indexOf("caderno-")===0){localStorage.setItem(k,o[k]);n++;}});
+    alert(n+" itens de progresso restaurados.");location.reload();}catch(e){alert("Arquivo inválido.");}};rd.readAsText(fl);};f.click();}
 function lastInFlow(){return st.mode==="rev"?st.qp+1>=st.queue.length:st.i+1>=QS.length;}
 function question(){
   var q=QS[st.i],a=aulaOf(q.aula),pos=posIn(q),cnt=stats(a.n).t;
@@ -663,10 +667,10 @@ app.addEventListener('click',function(e){
   else if(a==="bit"&&!st.done){var v=parseInt(b.getAttribute('data-v'),10);st.sel=(st.sel||0)^v;if(st.sel===0)st.sel=null;render();}
   else if(a==="vf"&&!st.done){var q0=QS[st.i],kk=parseInt(b.getAttribute('data-k'),10),cu=(st.sel||q0.opts.map(function(){return '-';}).join('')).split('');cu[kk]=b.getAttribute('data-x');st.sel=cu.join('');render();}
   else if(a==="explain"){var qq=QS[st.i];doExplain(qq,b);}
+  else if(a==="gsave"){var inp=b.closest('.gset').querySelector('.gkey'),v0=(inp.value||"").trim();try{if(v0)localStorage.setItem(GKEY,v0);}catch(e){}render();}
+  else if(a==="gdel"){try{localStorage.removeItem(GKEY);localStorage.removeItem(GOK);}catch(e){}render();}
   else if(a==="export"){exportAll();}
   else if(a==="import"){importAll();}
-  else if(a==="gsave"){var inp=b.closest('details').querySelector('.gin'),v=(inp.value||"").trim();if(v){try{localStorage.setItem(GKEY,v);}catch(e){}render();}}
-  else if(a==="gdel"){try{localStorage.removeItem(GKEY);}catch(e){}render();}
   else if(a==="zoom"){b.classList.toggle("zoomed");}
   else if(a==="opt"&&!st.done){st.sel=parseInt(b.getAttribute('data-k'),10);render();}
   else if(a==="confirm"&&canConfirm(QS[st.i])&&!st.done){var q=QS[st.i];st.ans[q.id]=st.sel;st.done=true;noteResult(q,st.sel===q.ans);
@@ -700,4 +704,5 @@ document.documentElement.setAttribute('data-cad','hub');
 render();
 })();
 </script>
+
 </body></html>
